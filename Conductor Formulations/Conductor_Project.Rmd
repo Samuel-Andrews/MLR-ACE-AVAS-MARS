@@ -15,7 +15,7 @@ load("C:/Users/qs5834mm/Desktop/DSCI 425/R/Regression.Rdata")
 
 cond_com =  read.csv("Conductors (combined).csv")
 cond_train = read.csv("Conductors (train).csv")
-cond_test = read.csv("Conductors (test).csv")
+cond_teat = read.csv("Conductors (test).csv")
 
 require(dplyr)
 require(ggplot2)
@@ -26,7 +26,7 @@ library(Ecfun)
 
 
 
-View(cond_com)
+#View(cond_com)
 
 
 
@@ -424,72 +424,72 @@ We are going to be working with 'x_train' data frame. It only includes our final
 x_train.mat = as.matrix(x_train)
 ```
 
-Let's first explore the correlation of our predictors by building a correlation plot:
+<!-- Let's first explore the correlation of our predictors by building a correlation plot: -->
 
-```{r fig.height=7, fig.width=7}
-{corr.x_train = cor(x_train.mat)
-#jpeg("corr.plot_predictors.png", width = 500, height = 500)
-corrplot(corr.x_train, order = 'hclust')
-#dev.off()
-}
-```
+<!-- ```{r fig.height=7, fig.width=7} -->
+<!-- {corr.x_train = cor(x_train.mat) -->
+<!-- #jpeg("corr.plot_predictors.png", width = 500, height = 500) -->
+<!-- corrplot(corr.x_train, order = 'hclust') -->
+<!-- #dev.off() -->
+<!-- } -->
+<!-- ``` -->
 
-Now, we are going to conduct principal component analysis using FactorMineR and factoextra libraries:
+<!-- Now, we are going to conduct principal component analysis using FactorMineR and factoextra libraries: -->
 
-```{r echo=TRUE, include=FALSE}
-require(factoextra)
-require(FactoMineR)
-####PCA - using factoMiner
-x_train.scale = scale(x_train.mat)
+<!-- ```{r echo=TRUE, include=FALSE} -->
+<!-- require(factoextra) -->
+<!-- require(FactoMineR) -->
+<!-- ####PCA - using factoMiner -->
+<!-- x_train.scale = scale(x_train.mat) -->
 
-cond.PCA = PCA(x_train.scale, quanti.sup = c(24,25,26))
-```
+<!-- cond.PCA = PCA(x_train.scale, quanti.sup = c(24,25,26)) -->
+<!-- ``` -->
 
-```{r}
-summary(cond.PCA)
-```
+<!-- ```{r} -->
+<!-- summary(cond.PCA) -->
+<!-- ``` -->
 
-Below, we see the significant variables contribution to the 1st and 2nd dimensions:
+<!-- Below, we see the significant variables contribution to the 1st and 2nd dimensions: -->
 
-```{r}
-#Significant correlation of variables to the first 2 dimensions
-dimdesc(cond.PCA, axes=c(1,2))
-```
-
-
-```{r}
-#Selecting only 8 features whose quality of representaiton was the highest:
-fviz_pca_var(cond.PCA, repel = T, select.var = list(cos2 = 10), col.var = "cos2")
-```
-
-```{r fig.height=5, fig.width=10, warning=FALSE}
-fviz_pca_biplot(cond.PCA, repel = F,
-                #Variables
-                select.var = list(contrib=10),
-                #alpha.var = "contrib", 
-                col.var = "cos2",
-                #gradient.cols = "RdYlBu",
-                #Individuals
-                select.ind = list(contrib = 1000),
-                geom.ind = "point",
-                #fill.ind = cond_train_new_vars$spacegroup, col.ind = "black",
-                pointshape = 21, pointsize = 2,
-                palette = "jco",
-                addEllipses = TRUE,
-                #col.var = "contrib", 
-                legend.title = list(fill = "spacegroup", color = "Quality of Representation",
-                                    alpha = "Cos2"),
-                cex=.7, 
-                ggtheme = theme_minimal())
-```
+<!-- ```{r} -->
+<!-- #Significant correlation of variables to the first 2 dimensions -->
+<!-- dimdesc(cond.PCA, axes=c(1,2)) -->
+<!-- ``` -->
 
 
-```{r}
-#Scree plot
-{fviz_screeplot(cond.PCA, addlabels = TRUE, ylim = c(0, 45))
-}
+<!-- ```{r} -->
+<!-- #Selecting only 8 features whose quality of representaiton was the highest: -->
+<!-- fviz_pca_var(cond.PCA, repel = T, select.var = list(cos2 = 10), col.var = "cos2") -->
+<!-- ``` -->
 
-```
+<!-- ```{r fig.height=5, fig.width=10, warning=FALSE} -->
+<!-- fviz_pca_biplot(cond.PCA, repel = F, -->
+<!--                 #Variables -->
+<!--                 select.var = list(contrib=10), -->
+<!--                 #alpha.var = "contrib",  -->
+<!--                 col.var = "cos2", -->
+<!--                 #gradient.cols = "RdYlBu", -->
+<!--                 #Individuals -->
+<!--                 select.ind = list(contrib = 1000), -->
+<!--                 geom.ind = "point", -->
+<!--                 #fill.ind = cond_train_new_vars$spacegroup, col.ind = "black", -->
+<!--                 pointshape = 21, pointsize = 2, -->
+<!--                 palette = "jco", -->
+<!--                 addEllipses = TRUE, -->
+<!--                 #col.var = "contrib",  -->
+<!--                 legend.title = list(fill = "spacegroup", color = "Quality of Representation", -->
+<!--                                     alpha = "Cos2"), -->
+<!--                 cex=.7,  -->
+<!--                 ggtheme = theme_minimal()) -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- #Scree plot -->
+<!-- {fviz_screeplot(cond.PCA, addlabels = TRUE, ylim = c(0, 45)) -->
+<!-- } -->
+
+<!-- ``` -->
 
 
 # Model Building
@@ -2175,350 +2175,350 @@ Our final random forest model predicts with accuracy of RMSLEP=0.05864 and gives
 
 Our last statistical model to consider are Neural Networks
 
-## Neural Networks
+<!-- ## Neural Networks -->
 
-```{r include=FALSE}
-###### Libraries #####
-{
-  library(tidyr)
-  library(dplyr)
-  library(ggplot2)
-  library(nnet)
-  #library(Ecfun)
-  library(car)
-  library(ISLR)
-  #library(MASS)
-  library(glmnet)
-  library(pls)
-  library(corrplot)
-  require(stringr)
-  library(gridExtra)
-  library(ipred)
-  library(randomForest)
-  library(nnet)
-  library(GGally)
-}
-```
+<!-- ```{r include=FALSE} -->
+<!-- ###### Libraries ##### -->
+<!-- { -->
+<!--   library(tidyr) -->
+<!--   library(dplyr) -->
+<!--   library(ggplot2) -->
+<!--   library(nnet) -->
+<!--   #library(Ecfun) -->
+<!--   library(car) -->
+<!--   library(ISLR) -->
+<!--   #library(MASS) -->
+<!--   library(glmnet) -->
+<!--   library(pls) -->
+<!--   library(corrplot) -->
+<!--   require(stringr) -->
+<!--   library(gridExtra) -->
+<!--   library(ipred) -->
+<!--   library(randomForest) -->
+<!--   library(nnet) -->
+<!--   library(GGally) -->
+<!-- } -->
+<!-- ``` -->
 
-Functions:
-```{r}
-###### Functions #####
-#detach("package:Ecfun", unload = TRUE)
-#rf.sscv Monte-Carlo CV function
-{rf.sscv = function(fit,data,p=.667,B=100,mtry=fit$mtry,ntree=fit$ntree) {
-  RMSEP = rep(0,B)
-  RMSLEP = rep(0,B)
-  MAEP = rep(0,B)
-  MAPEP = rep(0,B)
-  y = fit$y
-  n = nrow(data)
-  ss <- floor(n*p)
-  for (i in 1:B) {
-    sam = sample(1:n,ss,replace=F)
-    fit2 = randomForest(formula(fit),data=data[sam,],mtry=mtry,ntree=ntree)
-    ynew = predict(fit2,newdata=data[-sam,])
-    RMSEP[i] = sqrt(mean((y[-sam]-ynew)^2))
-    RMSLEP[i] = sqrt(mean((log(ynew +1) - log(y[-sam] +1))^2))
-    MAEP[i] = mean(abs(y[-sam]-ynew))
-    MAPEP[i] = mean((abs(y[-sam]-ynew)/y[-sam]))
-    
-  }
-  RMSEP = mean(RMSEP)
-  RMSLEP = mean(RMSLEP)
-  MAEP = mean(MAEP)
-  MAPEP = mean(MAPEP)
-  cat("RMSEP\n")
-  cat("===============\n")
-  cat(RMSEP,"\n\n")
-  cat("RMSLEP\n")
-  cat("===============\n")
-  cat(RMSLEP,"\n\n")
-  cat("MAEP\n")
-  cat("===============\n")
-  cat(MAEP,"\n\n")
-  cat("MAPEP\n")
-  cat("===============\n")
-  cat(MAPEP,"\n\n")
-  temp = data.frame(RMSEP=RMSEP, RMSLEP=RMSLEP, MAEP=MAEP,MAPEP=MAPEP)
-  return(temp)
-}
+<!-- Functions: -->
+<!-- ```{r} -->
+<!-- ###### Functions ##### -->
+<!-- #detach("package:Ecfun", unload = TRUE) -->
+<!-- #rf.sscv Monte-Carlo CV function -->
+<!-- {rf.sscv = function(fit,data,p=.667,B=100,mtry=fit$mtry,ntree=fit$ntree) { -->
+<!--   RMSEP = rep(0,B) -->
+<!--   RMSLEP = rep(0,B) -->
+<!--   MAEP = rep(0,B) -->
+<!--   MAPEP = rep(0,B) -->
+<!--   y = fit$y -->
+<!--   n = nrow(data) -->
+<!--   ss <- floor(n*p) -->
+<!--   for (i in 1:B) { -->
+<!--     sam = sample(1:n,ss,replace=F) -->
+<!--     fit2 = randomForest(formula(fit),data=data[sam,],mtry=mtry,ntree=ntree) -->
+<!--     ynew = predict(fit2,newdata=data[-sam,]) -->
+<!--     RMSEP[i] = sqrt(mean((y[-sam]-ynew)^2)) -->
+<!--     RMSLEP[i] = sqrt(mean((log(ynew +1) - log(y[-sam] +1))^2)) -->
+<!--     MAEP[i] = mean(abs(y[-sam]-ynew)) -->
+<!--     MAPEP[i] = mean((abs(y[-sam]-ynew)/y[-sam])) -->
 
-}
-#Predict Accuracy function
-{PredAcc = function(y, ypred){
-  RMSEP = sqrt(mean((y-ypred)^2))
-  RMSLEP = sqrt(mean((log(ypred +1) - log(y+1))^2))
-  MAE = mean(abs(y-ypred))
-  MAPE = mean(abs(y-ypred)/y)*100
-  cat("RMSEP\n")
-  cat("================\n")
-  cat(RMSEP, "\n\n")
-  cat("RMSLEP\n")
-  cat("================\n")
-  cat(RMSLEP, "\n\n")
-  cat("MAE\n")
-  cat("================\n")
-  cat(MAE, "\n\n")
-  cat("MAPE\n")
-  cat("================\n")
-  cat(MAPE, "\n\n")
-  return(data.frame(RMSEP = RMSEP, RMSLEP = RMSLEP, MAE = MAE, MAPE = MAPE))
-}
-}
-#Plotting variable importance
-{rfimp = function(rffit, horiz=T) {barplot(sort(rffit$importance[,1]),horiz=horiz,
-                                           xlab="Mean Decreasing in Accuracy",main="Variable Importance")
-}
-}
+<!--   } -->
+<!--   RMSEP = mean(RMSEP) -->
+<!--   RMSLEP = mean(RMSLEP) -->
+<!--   MAEP = mean(MAEP) -->
+<!--   MAPEP = mean(MAPEP) -->
+<!--   cat("RMSEP\n") -->
+<!--   cat("===============\n") -->
+<!--   cat(RMSEP,"\n\n") -->
+<!--   cat("RMSLEP\n") -->
+<!--   cat("===============\n") -->
+<!--   cat(RMSLEP,"\n\n") -->
+<!--   cat("MAEP\n") -->
+<!--   cat("===============\n") -->
+<!--   cat(MAEP,"\n\n") -->
+<!--   cat("MAPEP\n") -->
+<!--   cat("===============\n") -->
+<!--   cat(MAPEP,"\n\n") -->
+<!--   temp = data.frame(RMSEP=RMSEP, RMSLEP=RMSLEP, MAEP=MAEP,MAPEP=MAPEP) -->
+<!--   return(temp) -->
+<!-- } -->
 
-```
+<!-- } -->
+<!-- #Predict Accuracy function -->
+<!-- {PredAcc = function(y, ypred){ -->
+<!--   RMSEP = sqrt(mean((y-ypred)^2)) -->
+<!--   RMSLEP = sqrt(mean((log(ypred +1) - log(y+1))^2)) -->
+<!--   MAE = mean(abs(y-ypred)) -->
+<!--   MAPE = mean(abs(y-ypred)/y)*100 -->
+<!--   cat("RMSEP\n") -->
+<!--   cat("================\n") -->
+<!--   cat(RMSEP, "\n\n") -->
+<!--   cat("RMSLEP\n") -->
+<!--   cat("================\n") -->
+<!--   cat(RMSLEP, "\n\n") -->
+<!--   cat("MAE\n") -->
+<!--   cat("================\n") -->
+<!--   cat(MAE, "\n\n") -->
+<!--   cat("MAPE\n") -->
+<!--   cat("================\n") -->
+<!--   cat(MAPE, "\n\n") -->
+<!--   return(data.frame(RMSEP = RMSEP, RMSLEP = RMSLEP, MAE = MAE, MAPE = MAPE)) -->
+<!-- } -->
+<!-- } -->
+<!-- #Plotting variable importance -->
+<!-- {rfimp = function(rffit, horiz=T) {barplot(sort(rffit$importance[,1]),horiz=horiz, -->
+<!--                                            xlab="Mean Decreasing in Accuracy",main="Variable Importance") -->
+<!-- } -->
+<!-- } -->
 
-The data was loaded and prepared in the Shirnkage Methods section. We are going to continue working with train_model1 and train_model2 data frames.
-```{r echo=TRUE, include=FALSE}
-###### Model 1 #####
-{y = train_model1$formation_energy_ev_natom_log_y_plus_1
-X = train_model1
-}
+<!-- ``` -->
 
-#tcX = train_model1_no_box_cox[,c(1,2,25,26,27)]
-#ggpairs(tcX)
-#require(caret)
-set.seed(1111)
-mod1 = nnet(formation_energy_ev_natom_log_y_plus_1~., data = X, size=6, skip=T, linout=T, decay=0.0001, maxit=25000)
-#summary(mod1)
-```
+<!-- The data was loaded and prepared in the Shirnkage Methods section. We are going to continue working with train_model1 and train_model2 data frames. -->
+<!-- ```{r echo=TRUE, include=FALSE} -->
+<!-- ###### Model 1 ##### -->
+<!-- {y = train_model1$formation_energy_ev_natom_log_y_plus_1 -->
+<!-- X = train_model1 -->
+<!-- } -->
 
-
-```{r fig.height=4, fig.width=5}
-plot(X$formation_energy_ev_natom_log_y_plus_1, fitted(mod1))
-abline(0,1, lwd=2, col="blue")
-```
-
-We are now splitting the training set into the training and validation sets
-
-```{r}
-###### Create train, dev, and test sets #######
-
-{
-n = nrow(X)
-set.seed(1111)
-sam = sample(1:n,size=floor(n*.6667),replace=F)
-X.train = X[sam,] #form training dataset
-X.valid = X[-sam,] #form validation dataset
-y.train = X.train$formation_energy_ev_natom_log_y_plus_1
-y.valid = X.valid$formation_energy_ev_natom_log_y_plus_1
-}
-```
-
-Fit three different Neural Net models with different hyperparameters:
-
-```{r echo=TRUE, include=FALSE}
-nn1 = nnet(formation_energy_ev_natom_log_y_plus_1~., data = X.train, size=6, skip=F, linout=T, decay=0.01, maxit=25000)
-nn2 = nnet(formation_energy_ev_natom_log_y_plus_1~., data = X.train, size=8, skip=F, linout=T, decay=0.005, maxit=25000)
-nn3 = nnet(formation_energy_ev_natom_log_y_plus_1~., data = X.train, size=8, skip=T, linout=T, decay=0.05, maxit=25000)
-
-```
-
-Assign the Neural Net model into 'nn' below to check how it predicts and fits our data:
-
-```{r fig.height=5, fig.width=10}
-#best nn2 so far
-nn = nn2
-
-{ypred = predict(nn, newdata = X.valid)
-prediction = PredAcc(y.valid, ypred)
-}
-```
-
-```{r fig.height=5, fig.width=10}
-{par(mfrow=c(1,2))
-plot(y.train,predict(nn),xlab="Actual Formation Energy",ylab="Fitted Formation Energy",
-     main= paste("Training Data", " R^2: ", 
-                 round((cor(y.train, 
-                            predict(nn1))^2),4)))
-abline(0,1,col="red",lwd=2)
-
-plot(y.valid, ypred, xlab="Actual Formation Energy",ylab="Predicted Formation Energy",
-     main=paste("Test Data", "R^2: ",
-                round((cor(y.valid, 
-                           ypred)^2),4)))
-abline(0,1,col="red",lwd=2)
-par(mfrow=c(1,1))
-}
-```
-
-Our final Neural Network model predicts with accuracy of RMSLEP=0.03075 and gives us 82.39% rsquared value. It is not a good model to predict formaiton energy. 
-
-###Model 2
-
-```{r echo=TRUE, include=FALSE}
-###### Model 2 #####
-{y = train_model2$bandgap_energy_ev_log_y_plus_1
-X = train_model2
-}
-
-#tcX = train_model1_no_box_cox[,c(1,2,25,26,27)]
-#ggpairs(tcX)
-#require(caret)
-set.seed(1111)
-mod1 = nnet(bandgap_energy_ev_log_y_plus_1~., data = X, size=6, skip=T, linout=T, decay=0.0001, maxit=25000)
-#summary(mod1)
-```
+<!-- #tcX = train_model1_no_box_cox[,c(1,2,25,26,27)] -->
+<!-- #ggpairs(tcX) -->
+<!-- #require(caret) -->
+<!-- set.seed(1111) -->
+<!-- mod1 = nnet(formation_energy_ev_natom_log_y_plus_1~., data = X, size=6, skip=T, linout=T, decay=0.0001, maxit=25000) -->
+<!-- #summary(mod1) -->
+<!-- ``` -->
 
 
-```{r fig.height=4, fig.width=5}
-plot(X$bandgap_energy_ev_log_y_plus_1, fitted(mod1))
-abline(0,1, lwd=2, col="blue")
-```
+<!-- ```{r fig.height=4, fig.width=5} -->
+<!-- plot(X$formation_energy_ev_natom_log_y_plus_1, fitted(mod1)) -->
+<!-- abline(0,1, lwd=2, col="blue") -->
+<!-- ``` -->
 
-We are now splitting the training set into the training and validation sets
+<!-- We are now splitting the training set into the training and validation sets -->
 
-```{r}
-###### Create train, dev, and test sets #######
+<!-- ```{r} -->
+<!-- ###### Create train, dev, and test sets ####### -->
 
-{n = nrow(X)
-set.seed(1111)
-sam = sample(1:n,size=floor(n*.6667),replace=F)
-X.train = X[sam,] #form training dataset
-X.valid = X[-sam,] #form validation dataset
-y.train = X.train$bandgap_energy_ev_log_y_plus_1
-y.valid = X.valid$bandgap_energy_ev_log_y_plus_1
+<!-- { -->
+<!-- n = nrow(X) -->
+<!-- set.seed(1111) -->
+<!-- sam = sample(1:n,size=floor(n*.6667),replace=F) -->
+<!-- X.train = X[sam,] #form training dataset -->
+<!-- X.valid = X[-sam,] #form validation dataset -->
+<!-- y.train = X.train$formation_energy_ev_natom_log_y_plus_1 -->
+<!-- y.valid = X.valid$formation_energy_ev_natom_log_y_plus_1 -->
+<!-- } -->
+<!-- ``` -->
 
-#cond.rf = randomForest(y.train~.,data=X.train)
-#plot(cond.rf)
-#abline(h=0.000128,col="red",lwd=2)
-} 
-```
+<!-- Fit three different Neural Net models with different hyperparameters: -->
 
-Fit three different Neural Net models with different hyperparameters:
-```{r echo=TRUE, include=FALSE}
-nn1 = nnet(bandgap_energy_ev_log_y_plus_1~., data = X.train, size=6, skip=F, linout=T, decay=0.01, maxit=25000)
-nn2 = nnet(bandgap_energy_ev_log_y_plus_1~., data = X.train, size=8, skip=F, linout=T, decay=0.005, maxit=25000)
-nn3 = nnet(bandgap_energy_ev_log_y_plus_1~., data = X.train, size=10, skip=T, linout=T, decay=0.05, maxit=25000)
+<!-- ```{r echo=TRUE, include=FALSE} -->
+<!-- nn1 = nnet(formation_energy_ev_natom_log_y_plus_1~., data = X.train, size=6, skip=F, linout=T, decay=0.01, maxit=25000) -->
+<!-- nn2 = nnet(formation_energy_ev_natom_log_y_plus_1~., data = X.train, size=8, skip=F, linout=T, decay=0.005, maxit=25000) -->
+<!-- nn3 = nnet(formation_energy_ev_natom_log_y_plus_1~., data = X.train, size=8, skip=T, linout=T, decay=0.05, maxit=25000) -->
 
-```
+<!-- ``` -->
 
-Assign the Neural Net model into 'nn' below to check how it predicts and fits our data:
+<!-- Assign the Neural Net model into 'nn' below to check how it predicts and fits our data: -->
 
-```{r}
-#best nn3 so far
-nn = nn3
+<!-- ```{r fig.height=5, fig.width=10} -->
+<!-- #best nn2 so far -->
+<!-- nn = nn2 -->
 
-{ypred = predict(nn, newdata = X.valid)
-prediction = PredAcc(y.valid, ypred)
-}
-```
+<!-- {ypred = predict(nn, newdata = X.valid) -->
+<!-- prediction = PredAcc(y.valid, ypred) -->
+<!-- } -->
+<!-- ``` -->
 
-```{r fig.height=5, fig.width=10}
-{ 
-  par(mfrow=c(1,2))
-  plot(y.train,predict(nn1),xlab="Actual Formation Energy",ylab="Fitted Formation Energy",
-       main= paste("Training Data", " R^2: ", 
-                   round((cor(y.train, 
-                              predict(nn1))^2),4)))
-  abline(0,1,col="red",lwd=2)
-  
-  plot(y.valid, ypred, xlab="Actual Formation Energy",ylab="Predicted Formation Energy",
-       main=paste("Test Data", "R^2: ",
-                  round((cor(y.valid, 
-                             ypred)^2),4)))
-  abline(0,1,col="red",lwd=2)
-  par(mfrow=c(1,1))
-}
+<!-- ```{r fig.height=5, fig.width=10} -->
+<!-- {par(mfrow=c(1,2)) -->
+<!-- plot(y.train,predict(nn),xlab="Actual Formation Energy",ylab="Fitted Formation Energy", -->
+<!--      main= paste("Training Data", " R^2: ",  -->
+<!--                  round((cor(y.train,  -->
+<!--                             predict(nn1))^2),4))) -->
+<!-- abline(0,1,col="red",lwd=2) -->
 
-```
+<!-- plot(y.valid, ypred, xlab="Actual Formation Energy",ylab="Predicted Formation Energy", -->
+<!--      main=paste("Test Data", "R^2: ", -->
+<!--                 round((cor(y.valid,  -->
+<!--                            ypred)^2),4))) -->
+<!-- abline(0,1,col="red",lwd=2) -->
+<!-- par(mfrow=c(1,1)) -->
+<!-- } -->
+<!-- ``` -->
 
-Our final Neural Network model predicts with accuracy of RMSLEP=0.0618 and gives us 91.42% rsquared value. It is not a good model to predict bandgap energy. 
+<!-- Our final Neural Network model predicts with accuracy of RMSLEP=0.03075 and gives us 82.39% rsquared value. It is not a good model to predict formaiton energy.  -->
 
-## Keras Regressor: dense neural network
-```{r}
-####### KERAS ########
-require(keras)
-{y = train_model1$formation_energy_ev_natom_log_y_plus_1
-train_data = as.matrix(scale(train_model1))
-}
-```
+<!-- ###Model 2 -->
 
-```{r}
-build_model <- function() {
-  
-  model <- keras_model_sequential() %>%
-    layer_dense(units = 64, activation = "relu",
-                input_shape = dim(train_data)[2]) %>%
-    layer_dropout(0.6) %>%
-    layer_dense(units = 64, activation = "relu") %>%
-    layer_dropout(0.6) %>%
-    layer_dense(units = 1, activation = "linear")
-  
-  model %>% compile(
-    loss = "mse",
-    optimizer = optimizer_rmsprop(),
-    metrics = list("mean_squared_logarithmic_error")
-  )
-  
- return(model)
-}
-```
+<!-- ```{r echo=TRUE, include=FALSE} -->
+<!-- ###### Model 2 ##### -->
+<!-- {y = train_model2$bandgap_energy_ev_log_y_plus_1 -->
+<!-- X = train_model2 -->
+<!-- } -->
 
-```{r}
-model <- build_model()
-model %>% summary()
-```
-
-```{r}
-# Display training progress by printing a single dot for each completed epoch.
-print_dot_callback <- callback_lambda(
-  on_epoch_end = function(epoch, logs) {
-    if (epoch %% 80 == 0) cat("\n")
-    cat(".")
-  }
-)    
-epochs <- 50
-```
-
-```{r}
-# Fit the model and store training stats
-history <- model %>% fit(
-  train_data,
-  y,
-  epochs = epochs,
-  validation_split = 0.2,
-  verbose = 0,
-  callbacks = list(print_dot_callback)
-)
-
-```
-
-```{r}
-sqrt(mean(history$metrics$mean_squared_logarithmic_error))
-```
-
-Not performing well...
-
-#Final Models
-
-Our Random Forest model performed the best in prdicting the formation of energy, whereas the XGboost Model performed the best in predicting the bandgap energy
-
-Below, is the comparison of all the models we ran, in predicting formation energy and bandgap energy:
-```{r}
-#Sorted for RMSLEP for formation energy
-models.all = read.csv("model_comparison.csv")
-models.all
-```
-
-```{r}
-#Sorted for RMSLEP for bandgap energy
-models.all[order(models.all$RMSLEP.for.bandgap),]
-```
+<!-- #tcX = train_model1_no_box_cox[,c(1,2,25,26,27)] -->
+<!-- #ggpairs(tcX) -->
+<!-- #require(caret) -->
+<!-- set.seed(1111) -->
+<!-- mod1 = nnet(bandgap_energy_ev_log_y_plus_1~., data = X, size=6, skip=T, linout=T, decay=0.0001, maxit=25000) -->
+<!-- #summary(mod1) -->
+<!-- ``` -->
 
 
-## Predicting Formation of Energy: Random Forest
+<!-- ```{r fig.height=4, fig.width=5} -->
+<!-- plot(X$bandgap_energy_ev_log_y_plus_1, fitted(mod1)) -->
+<!-- abline(0,1, lwd=2, col="blue") -->
+<!-- ``` -->
 
-Revisiting the best model and going over the variable importance:
+<!-- We are now splitting the training set into the training and validation sets -->
 
-```{r}
-#randomforest.final
-```
+<!-- ```{r} -->
+<!-- ###### Create train, dev, and test sets ####### -->
+
+<!-- {n = nrow(X) -->
+<!-- set.seed(1111) -->
+<!-- sam = sample(1:n,size=floor(n*.6667),replace=F) -->
+<!-- X.train = X[sam,] #form training dataset -->
+<!-- X.valid = X[-sam,] #form validation dataset -->
+<!-- y.train = X.train$bandgap_energy_ev_log_y_plus_1 -->
+<!-- y.valid = X.valid$bandgap_energy_ev_log_y_plus_1 -->
+
+<!-- #cond.rf = randomForest(y.train~.,data=X.train) -->
+<!-- #plot(cond.rf) -->
+<!-- #abline(h=0.000128,col="red",lwd=2) -->
+<!-- }  -->
+<!-- ``` -->
+
+<!-- Fit three different Neural Net models with different hyperparameters: -->
+<!-- ```{r echo=TRUE, include=FALSE} -->
+<!-- nn1 = nnet(bandgap_energy_ev_log_y_plus_1~., data = X.train, size=6, skip=F, linout=T, decay=0.01, maxit=25000) -->
+<!-- nn2 = nnet(bandgap_energy_ev_log_y_plus_1~., data = X.train, size=8, skip=F, linout=T, decay=0.005, maxit=25000) -->
+<!-- nn3 = nnet(bandgap_energy_ev_log_y_plus_1~., data = X.train, size=10, skip=T, linout=T, decay=0.05, maxit=25000) -->
+
+<!-- ``` -->
+
+<!-- Assign the Neural Net model into 'nn' below to check how it predicts and fits our data: -->
+
+<!-- ```{r} -->
+<!-- #best nn3 so far -->
+<!-- nn = nn3 -->
+
+<!-- {ypred = predict(nn, newdata = X.valid) -->
+<!-- prediction = PredAcc(y.valid, ypred) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ```{r fig.height=5, fig.width=10} -->
+<!-- {  -->
+<!--   par(mfrow=c(1,2)) -->
+<!--   plot(y.train,predict(nn1),xlab="Actual Formation Energy",ylab="Fitted Formation Energy", -->
+<!--        main= paste("Training Data", " R^2: ",  -->
+<!--                    round((cor(y.train,  -->
+<!--                               predict(nn1))^2),4))) -->
+<!--   abline(0,1,col="red",lwd=2) -->
+
+<!--   plot(y.valid, ypred, xlab="Actual Formation Energy",ylab="Predicted Formation Energy", -->
+<!--        main=paste("Test Data", "R^2: ", -->
+<!--                   round((cor(y.valid,  -->
+<!--                              ypred)^2),4))) -->
+<!--   abline(0,1,col="red",lwd=2) -->
+<!--   par(mfrow=c(1,1)) -->
+<!-- } -->
+
+<!-- ``` -->
+
+<!-- Our final Neural Network model predicts with accuracy of RMSLEP=0.0618 and gives us 91.42% rsquared value. It is not a good model to predict bandgap energy.  -->
+
+<!-- ## Keras Regressor: dense neural network -->
+<!-- ```{r} -->
+<!-- ####### KERAS ######## -->
+<!-- require(keras) -->
+<!-- {y = train_model1$formation_energy_ev_natom_log_y_plus_1 -->
+<!-- train_data = as.matrix(scale(train_model1)) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- build_model <- function() { -->
+
+<!--   model <- keras_model_sequential() %>% -->
+<!--     layer_dense(units = 64, activation = "relu", -->
+<!--                 input_shape = dim(train_data)[2]) %>% -->
+<!--     layer_dropout(0.6) %>% -->
+<!--     layer_dense(units = 64, activation = "relu") %>% -->
+<!--     layer_dropout(0.6) %>% -->
+<!--     layer_dense(units = 1, activation = "linear") -->
+
+<!--   model %>% compile( -->
+<!--     loss = "mse", -->
+<!--     optimizer = optimizer_rmsprop(), -->
+<!--     metrics = list("mean_squared_logarithmic_error") -->
+<!--   ) -->
+
+<!--  return(model) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- model <- build_model() -->
+<!-- model %>% summary() -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- # Display training progress by printing a single dot for each completed epoch. -->
+<!-- print_dot_callback <- callback_lambda( -->
+<!--   on_epoch_end = function(epoch, logs) { -->
+<!--     if (epoch %% 80 == 0) cat("\n") -->
+<!--     cat(".") -->
+<!--   } -->
+<!-- )     -->
+<!-- epochs <- 50 -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- # Fit the model and store training stats -->
+<!-- history <- model %>% fit( -->
+<!--   train_data, -->
+<!--   y, -->
+<!--   epochs = epochs, -->
+<!--   validation_split = 0.2, -->
+<!--   verbose = 0, -->
+<!--   callbacks = list(print_dot_callback) -->
+<!-- ) -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- sqrt(mean(history$metrics$mean_squared_logarithmic_error)) -->
+<!-- ``` -->
+
+<!-- Not performing well... -->
+
+<!-- #Final Models -->
+
+<!-- Our Random Forest model performed the best in prdicting the formation of energy, whereas the XGboost Model performed the best in predicting the bandgap energy -->
+
+<!-- Below, is the comparison of all the models we ran, in predicting formation energy and bandgap energy: -->
+<!-- ```{r} -->
+<!-- #Sorted for RMSLEP for formation energy -->
+<!-- models.all = read.csv("model_comparison.csv") -->
+<!-- models.all -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #Sorted for RMSLEP for bandgap energy -->
+<!-- models.all[order(models.all$RMSLEP.for.bandgap),] -->
+<!-- ``` -->
+
+
+<!-- ## Predicting Formation of Energy: Random Forest -->
+
+<!-- Revisiting the best model and going over the variable importance: -->
+
+<!-- ```{r} -->
+<!-- #randomforest.final -->
+<!-- ``` -->
 
 
 
@@ -2893,7 +2893,8 @@ cond_train3_band_pifs = read.csv("cond_train3_band_stup.csv")
 
 band.mars2 = earth(bandgap_energy_ev_log_y_plus_1~.,degree = 2, data = cond_train3_band_pifs, nk = 30, nfold = 20, nprune =  15, pmethod = "exhaustive" )
 
-plotmo(band.mars2, caption = NULL )
+par(mfrow=c(1,1))
+plotmo(band.mars2)
 ```
 
 Variable names had to be changed in order to prevent plotmo from failing to provide readable plots, as shown in the new read in.
